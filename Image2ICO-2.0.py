@@ -16,7 +16,7 @@ class Image2Ico:
     def __init__(self):
         self.win = Tk()
         self.win.title('图标制作')
-        self.win.iconbitmap('icon/img2ico.ico')
+        self.win.iconbitmap('icon/ico-32.ico')
         self.window_center(self.win, 600, 400)    # 窗口居中
         self.win.resizable(0, 0)
 
