@@ -16,62 +16,56 @@ class Image2Ico:
         self.win = Tk()
         self.win.title('图标制作')
         self.win.iconbitmap('icon/ico-32.ico')
-        self.window_center(self.win, 600, 400)    # 窗口居中
+        self.window_center(self.win, 600, 360)    # 窗口居中
         self.win.resizable(0, 0)
 
-        titleLabel = Label(self.win, text='图标制作', font="Times 20 bold", relief=RIDGE)
-        titleLabel.pack(pady=20, ipadx=5, ipady=5)
-
-        frame = Frame(self.win, relief=GROOVE, borderwidth=5)
-        frame.pack(padx=10, pady=10)
+        lf = LabelFrame(self.win, text='图标制作', bd=2, font='楷体 16')
+        lf.pack(pady=20, ipadx=5, ipady=5)
 
         # 打开图片
-        openLabel = Label(frame, text='打开图片: ', bg='#FFA500', width=10, anchor='e')
+        openLabel = Label(lf, text='打开图片: ', bg='#FFA500', width=10, anchor='e')
         openLabel.grid(row=0, column=0, padx=20, pady=10)
 
         self.imgFile = StringVar()
-        Entry(frame, width=50, textvariable=self.imgFile).grid(row=0, column=1, sticky=W)
+        Entry(lf, width=50, textvariable=self.imgFile).grid(row=0, column=1, sticky=W)
 
-        Button(frame, text=' 预览 ', command=self.open_file).grid(row=0, column=2, padx=10)
+        Button(lf, text=' 预览 ', command=self.open_file).grid(row=0, column=2, padx=10)
 
         # 保存结果
-        saveLabel = Label(frame, text='保存为: ', bg='#FFA500', width=10, anchor='e')
+        saveLabel = Label(lf, text='保存为: ', bg='#FFA500', width=10, anchor='e')
         saveLabel.grid(row=1, column=0, padx=20, pady=10)
 
         self.icoFile = StringVar()
-        Entry(frame, width=50, textvariable=self.icoFile).grid(row=1, column=1, sticky=W)
+        Entry(lf, width=50, textvariable=self.icoFile).grid(row=1, column=1, sticky=W)
 
-        Button(frame, text=' 预览 ', command=self.set_save_filename).grid(row=1, column=2, padx=5)
+        Button(lf, text=' 预览 ', command=self.set_save_filename).grid(row=1, column=2, padx=5)
 
         # 选择分辨率
-        sizeLabel = Label(frame, text='ICO大小: ', bg='#FFA500', width=10, anchor='e')
+        sizeLabel = Label(lf, text='ICO大小: ', bg='#FFA500', width=10, anchor='e')
         sizeLabel.grid(row=2, column=0, padx=20, pady=10)
-
-        frame2 = Frame(frame)
-        frame2.grid(row=2, column=1)
 
         self.size = StringVar()
         # 组合框
-        cb = Combobox(frame2, textvariable=self.size, width=10, state='readonly')
+        cb = Combobox(lf, textvariable=self.size, width=10, state='readonly')
         cb['value'] = ('16x16', '32x32', '64x64', '128x128', '256x256')
         cb.current(4)
         cb.grid(row=2, column=1)
 
         # 约束比例
-        scaleLabel = Label(frame, text='约束比例: ', bg='#FFA500', width=10, anchor='e')
+        scaleLabel = Label(lf, text='约束比例: ', bg='#FFA500', width=10, anchor='e')
         scaleLabel.grid(row=3, column=0, pady=10)
-
-        frame3 = Frame(frame)
-        frame3.grid(row=3, column=1)
 
         self.scale = IntVar()
         self.scale.set(1)
 
-        yesRButton = Radiobutton(frame3, text='是', variable=self.scale, value=1)
-        yesRButton.grid(row=3, column=1, padx=3)
+        frame = Frame(lf)
+        frame.grid(row=3, column=1)
 
-        noRButton = Radiobutton(frame3, text='否', variable=self.scale, value=0)
-        noRButton.grid(row=3, column=2, padx=3)
+        yesRButton = Radiobutton(frame, text='是', variable=self.scale, value=1)
+        yesRButton.grid(row=0, column=0, padx=3)
+
+        noRButton = Radiobutton(frame, text='否', variable=self.scale, value=0)
+        noRButton.grid(row=0, column=1, padx=3)
 
         startButton = Button(self.win, text=' 开始转换 ', bg='#FFA500', command=self.translate)
         startButton.config(relief=SOLID, height=2)
@@ -116,8 +110,7 @@ class Image2Ico:
 
     def open_file(self):
         filename = askopenfilename(filetypes=[('所有支持的文件', '*.png;*.jpg;*.ico'),
-            ('PNG文件', '*.png'),('JPG文件', '*.jpg'), ('ICO文件', '*.ico')],
-            initialdir='F:/'
+            ('PNG文件', '*.png'),('JPG文件', '*.jpg'), ('ICO文件', '*.ico')]
         )
         self.imgFile.set(filename)
 
@@ -142,14 +135,17 @@ class Image2Ico:
         if not icoFileVar.endswith('.ico'):
             icoFileVar += '.ico'
 
-        img = PythonMagick.Image(imgFileVar)
+        try:
+            img = PythonMagick.Image(imgFileVar)
 
-        size = self.size.get()
-        if not self.scale.get():
-            size =self.size.get() + '!'
-        img.sample(size)
-        img.write(icoFileVar)
-        messagebox.showinfo(title='转换完成', message=f'文件保存于{icoFileVar}.')
+            size = self.size.get()
+            if not self.scale.get():
+                size = self.size.get() + '!'
+            img.sample(size)
+            img.write(icoFileVar)
+            messagebox.showinfo(title='转换完成', message=f'文件保存于{icoFileVar}.')
+        except RuntimeError:
+            messagebox.showerror(title='打开文件错误', message=f'无法打开 {imgFileVar} 文件')
 
 
 if __name__ == '__main__':

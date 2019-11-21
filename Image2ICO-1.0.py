@@ -68,10 +68,10 @@ class Image2Ico:
         self.scale.set(1)
 
         yesRButton = Radiobutton(frame3, text='是', variable=self.scale, value=1)
-        yesRButton.grid(row=3, column=1, padx=3)
+        yesRButton.grid(row=0, column=0, padx=3)
 
         noRButton = Radiobutton(frame3, text='否', variable=self.scale, value=0)
-        noRButton.grid(row=3, column=2, padx=3)
+        noRButton.grid(row=0, column=1, padx=3)
 
         startButton = Button(self.win, text=' 开始转换 ', bg='#FFA500', command=self.translate)
         startButton.config(relief=SOLID, height=2)
@@ -117,7 +117,6 @@ class Image2Ico:
     def open_file(self):
         filename = askopenfilename(filetypes=[('所有支持的文件', '*.png;*.jpg;*.ico'),
             ('PNG文件', '*.png'),('JPG文件', '*.jpg'), ('ICO文件', '*.ico')],
-            initialdir='F:/'
         )
         self.imgFile.set(filename)
 
