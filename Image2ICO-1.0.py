@@ -78,7 +78,7 @@ class Image2Ico:
         startButton.config(font=('黑体', 12))
         startButton.pack(pady=5)
 
-        dirButton = Button(self.win, text='打开储存文件夹', command=self.open_explorer)
+        dirButton = Button(self.win, text='保存文件夹', command=self.open_explorer)
         dirButton.pack(side=LEFT, padx=20, pady=10)
 
         previewButton = Button(self.win, text='预览图标', command=self.preview_ico)
@@ -95,7 +95,7 @@ class Image2Ico:
 
     def preview_ico(self):
         path = self.icoFile.get()
-        if not path:
+        if not os.path.exists(path):
             messagebox.showwarning(title='转换未进行', message='没有可预览的ico文件!')
             return
         command = f'explorer "{path}"'
@@ -122,8 +122,8 @@ class Image2Ico:
 
     def set_save_filename(self):
         filename = asksaveasfilename(filetypes=[('ICO文件', '*.ico')])
-        # 如果文件名中没有扩展名.ico, 则为其添加扩展名.ico
-        if not filename.endswith('.ico'):
+        # 如果文件名中没有扩展名.ico, 且不为空，则为其添加扩展名.ico
+        if not filename.endswith('.ico') and filename:
             filename += '.ico'
         self.icoFile.set(filename)
 
