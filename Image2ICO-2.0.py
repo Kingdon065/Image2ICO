@@ -147,14 +147,17 @@ class Image2Ico:
         if not icoFileVar.endswith('.ico'):
             icoFileVar += '.ico'
 
-        img = PythonMagick.Image(imgFileVar)
+        try:
+            img = PythonMagick.Image(imgFileVar)
 
-        size = self.size.get()
-        if not self.scale.get():
-            size =self.size.get() + '!'
-        img.sample(size)
-        img.write(icoFileVar)
-        messagebox.showinfo(title='转换完成', message=f'文件保存于{icoFileVar}.')
+            size = self.size.get()
+            if not self.scale.get():
+                size = self.size.get() + '!'
+            img.sample(size)
+            img.write(icoFileVar)
+            messagebox.showinfo(title='转换完成', message=f'文件保存于{icoFileVar}.')
+        except RuntimeError:
+            messagebox.showerror(title='打开文件错误', message=f'无法打开 {imgFileVar} 文件')
 
 
 if __name__ == '__main__':
