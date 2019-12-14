@@ -15,7 +15,7 @@ from PIL import Image, ImageTk
 class Image2Ico:
     def __init__(self):
         self.win = Tk()
-        self.win.title('图标制作')
+        self.win.title('图标制作2.0')
         self.win.iconbitmap('icon/ico-32.ico')
         self.window_center(self.win, 600, 360)  # 窗口居中
         self.win.resizable(0, 0)
