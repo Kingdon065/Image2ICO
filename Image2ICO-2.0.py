@@ -39,7 +39,7 @@ class Image2Ico:
         self.icoFile = StringVar()
         Entry(lf, width=50, textvariable=self.icoFile).grid(row=1, column=1, sticky=W)
 
-        Button(lf, text=' 预览 ', command=self.set_save_filename).grid(row=1, column=2, padx=5)
+        Button(lf, text=' 预览 ', command=self.save_filename).grid(row=1, column=2, padx=5)
 
         # 选择分辨率
         sizeLabel = Label(lf, text='ICO大小: ', bg='#FFA500', width=10, anchor='e')
@@ -91,7 +91,7 @@ class Image2Ico:
     def preview_ico(self):
         path = self.icoFile.get()
         if not os.path.exists(path):
-            messagebox.showwarning(title='转换未进行', message='没有可预览的ico文件!')
+            messagebox.showinfo(title='提示', message='没有可预览的ico文件!')
             return
 
         height = self.size.get().split('x')[0]
@@ -112,7 +112,7 @@ class Image2Ico:
     def open_explorer(self):
         path = os.path.dirname(self.icoFile.get())
         if not path:
-            messagebox.showwarning(title='ico文件路径未指定', message='没有可打开的ico文件夹!')
+            messagebox.showinfo(title='提示', message='未指定保存路径!')
             return
         command = f'explorer "{path}"'
         # 路径中有'/'，命令无法运行
@@ -126,21 +126,18 @@ class Image2Ico:
         )
         self.imgFile.set(filename)
 
-    def set_save_filename(self):
-        filename = asksaveasfilename(filetypes=[('ICO文件', '*.ico')])
-        # 如果文件名中没有扩展名.ico, 且不为空，则为其添加扩展名.ico
-        if not filename.endswith('.ico') and filename:
-                filename += '.ico'
+    def save_filename(self):
+        filename = asksaveasfilename(filetypes=[('ICO文件', '*.ico')], defaultextension='.ico')
         self.icoFile.set(filename)
 
     def translate(self):
         imgFileVar = self.imgFile.get()
         if not os.path.exists(imgFileVar):
-            messagebox.showerror(title='路径错误', message='图片路径未指定或不存在!')
+            messagebox.showinfo(title='提示', message='图片路径未指定或不存在!')
             return
         icoFileVar = self.icoFile.get()
         if not icoFileVar:
-            messagebox.showerror(title='路径错误', message='存储路径未指定!')
+            messagebox.showinfo(title='提示', message='未指定保存路径!')
             return
 
         # 确保保存的文件的扩展名为.ico
@@ -155,9 +152,9 @@ class Image2Ico:
                 size = self.size.get() + '!'
             img.sample(size)
             img.write(icoFileVar)
-            messagebox.showinfo(title='转换完成', message=f'文件保存于{icoFileVar}.')
+            messagebox.showinfo(title='提示', message=f'文件保存于{icoFileVar}.')
         except RuntimeError:
-            messagebox.showerror(title='打开文件错误', message=f'无法打开 {imgFileVar} 文件')
+            messagebox.showinfo(title='提示', message=f'无法打开 {imgFileVar} 文件')
 
 
 if __name__ == '__main__':
